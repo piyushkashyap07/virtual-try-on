@@ -11,6 +11,9 @@ import { tryOn } from './services/geminiService';
 import { ImageState } from './types';
 
 const App: React.FC = () => {
+  // Get API URL from environment variables
+  const API_URL = 'https://carefree-solace-production.up.railway.app';
+  
   const [personImage, setPersonImage] = useState<ImageState | null>(null);
   const [garmentImage, setGarmentImage] = useState<ImageState | null>(null);
   const [resultImage, setResultImage] = useState<string | null>(null);
@@ -51,7 +54,7 @@ const App: React.FC = () => {
   // Fetch complete user profile from server
   const fetchUserProfile = async (token: string) => {
     try {
-      const response = await fetch('http://localhost:5000/api/auth/profile', {
+      const response = await fetch(`${API_URL}/api/auth/profile`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -121,7 +124,7 @@ const App: React.FC = () => {
 
     try {
       console.log('Uploading reference images...');
-      const response = await fetch('http://localhost:5000/api/auth/reference-images', {
+      const response = await fetch(`${API_URL}/api/auth/reference-images`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -196,7 +199,7 @@ const App: React.FC = () => {
         const token = localStorage.getItem('token');
         const useReferenceImages = user.referenceImages?.fullLengthImage && !personImage;
         
-        const response = await fetch('http://localhost:5000/api/tryon/create', {
+        const response = await fetch(`${API_URL}/api/tryon/create`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -366,6 +369,7 @@ const App: React.FC = () => {
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
         onAuthSuccess={handleAuthSuccess}
+        apiUrl={API_URL}
       />
 
       {/* Reference Image Uploader Modal */}
